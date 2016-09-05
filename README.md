@@ -1,6 +1,7 @@
 # The Czech Bar Association
-Crawler of Czech Republic The Czech Bar Association
-Downloads HTML files, parsing them and produces CSV file with results
+Crawler of Czech Republic The Czech Bar Association.
+
+Downloads HTML files, parsing them and produces CSV file with results.
 
 
 ## Requirements
@@ -12,7 +13,8 @@ Downloads HTML files, parsing them and produces CSV file with results
 
 ##Usage
 
-```Usage: cak-crawler.py [options]
+```
+Usage: cak-crawler.py [options]
 
 Options:
   -h, --help            show this help message and exit
@@ -20,4 +22,5 @@ Options:
                         Name of output CSV file
   -e, --extraction      Make only extraction without download new data
   -d DIR, --output-directory=DIR
-                        Path to output directory```
+                        Path to output directory
+```
