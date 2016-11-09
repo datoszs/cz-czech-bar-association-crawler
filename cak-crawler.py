@@ -276,7 +276,10 @@ def check_records(page_from, pages):
                 jmeno = link.text.strip()
                 if jmeno != "":
                     #logger.debug(U"%s" % jmeno)
-                    list_of_links.append({"url": urljoin(base_url, original_link), "id": id, "text": jmeno})
+                    if not os.path.exists(join(documents_dir_path, id + ".html")):
+                        import urllib.request
+                        urllib.request.urlretrieve(urljoin(base_url, original_link), join(documents_dir_path, id + ".html"))
+                        list_of_links.append({"url": urljoin(base_url, original_link), "id": id, "text": jmeno})
         session.evaluate("javascript:__doPostBack('ctl00$mainContent$gridResult','Page$" + str(page + 1) + "')",
                          expect_loading=True)  #  go to next page
     #logger.info("New records %s" % len(list_of_links))
@@ -333,11 +336,9 @@ def extract_information(list_of_links):
     else:  # only new records
         for html_file in tqdm(list_of_links):
             make_record(
-                make_soup(
-                    join(documents_dir_path, html_file["id"] + ".html"),
-                    join(documents_dir_path, html_file["id"] + ".html"),
-                    id=html_file["id"]
-                )
+                make_soup(join(documents_dir_path, html_file["id"] + ".html")),
+                join(documents_dir_path, html_file["id"] + ".html"),
+                id=html_file["id"]
             )
 
 
@@ -369,12 +370,13 @@ def main():
             for record in tqdm(list_of_links):
                 #print(record)#,record["url"],record["id"])
                 # may it be wget?
-                import urllib.request
-                urllib.request.urlretrieve(record["url"], join(documents_dir_path, record["id"] + ".html"))
-                #session.open(record["url"])
-                #response = str(urlopen(record["url"]).read())
-                #response = session.content
-                #extract_data(response, record["id"]+".html")
+                if not os.path.exists(join(documents_dir_path, record["id"] + ".html")):
+                    import urllib.request
+                    urllib.request.urlretrieve(record["url"], join(documents_dir_path, record["id"] + ".html"))
+                    #session.open(record["url"])
+                    #response = str(urlopen(record["url"]).read())
+                    #response = session.content
+                    #extract_data(response, record["id"]+".html")
 
             logger.info("Download  - DONE")
             session.exit()
