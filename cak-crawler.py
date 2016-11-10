@@ -17,6 +17,8 @@ import logging
 import math
 import os
 import re
+import sys
+import shutil
 from datetime import datetime
 from optparse import OptionParser
 from bs4 import BeautifulSoup, SoupStrainer
@@ -277,8 +279,8 @@ def check_records(page_from, pages):
                 if jmeno != "":
                     #logger.debug(U"%s" % jmeno)
                     if not os.path.exists(join(documents_dir_path, id + ".html")):
-                        import urllib.request
-                        urllib.request.urlretrieve(urljoin(base_url, original_link), join(documents_dir_path, id + ".html"))
+                        #import urllib.request
+                        #urllib.request.urlretrieve(urljoin(base_url, original_link), join(documents_dir_path, id + ".html"))
                         list_of_links.append({"url": urljoin(base_url, original_link), "id": id, "text": jmeno})
         session.evaluate("javascript:__doPostBack('ctl00$mainContent$gridResult','Page$" + str(page + 1) + "')",
                          expect_loading=True)  #  go to next page
@@ -394,7 +396,7 @@ def main():
             logger.info("Only extract information...")
             extract_information(list_of_links=None)
             logger.info("Extraction  - DONE")
-
+    return True
 
 if __name__ == "__main__":
     options = parameters()
@@ -421,3 +423,6 @@ if __name__ == "__main__":
             logger.info("Moving files")
             shutil.move(documents_dir_path, result_dir_path)
             shutil.move(join(out_dir, output_file), result_dir_path)
+            sys.exit(0)
+        else:
+            sys.exit(-1)
