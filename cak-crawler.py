@@ -17,14 +17,15 @@ import logging
 import math
 import os
 import re
-import sys
 import shutil
+import sys
 from datetime import datetime
 from optparse import OptionParser
+from os.path import join
+
 from bs4 import BeautifulSoup, SoupStrainer
 from ghost import Ghost
 from tqdm import tqdm
-from os.path import join
 
 try:
     from urllib.parse import urljoin
@@ -374,11 +375,15 @@ def main():
                 # may it be wget?
                 if not os.path.exists(join(documents_dir_path, record["id"] + ".html")):
                     import urllib.request
-                    urllib.request.urlretrieve(record["url"], join(documents_dir_path, record["id"] + ".html"))
-                    #session.open(record["url"])
-                    #response = str(urlopen(record["url"]).read())
-                    #response = session.content
-                    #extract_data(response, record["id"]+".html")
+                    try:
+                        urllib.request.urlretrieve(record["url"], join(documents_dir_path, record["id"] + ".html"))
+                    except urllib.request.HTTPError as ex:
+                            logger.error(ex.msg, exc_info=True)
+
+                            #session.open(record["url"])
+                            #response = str(urlopen(record["url"]).read())
+                            #response = session.content
+                            #extract_data(response, record["id"]+".html")
 
             logger.info("Download  - DONE")
             session.exit()
@@ -397,6 +402,7 @@ def main():
             extract_information(list_of_links=None)
             logger.info("Extraction  - DONE")
     return True
+
 
 if __name__ == "__main__":
     options = parameters()
