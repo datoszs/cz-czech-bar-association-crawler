@@ -333,7 +333,7 @@ def extract_information(list_of_links):
 
     if list_of_links is None:  # all records in directory
         list_of_links = [fn for fn in next(os.walk(documents_dir_path))[2]]
-        for html_file in tqdm(list_of_links):
+        for html_file in list_of_links:
             logger.debug(html_file)
             make_record(make_soup(join(documents_dir_path, html_file)), join(documents_dir_path, html_file))
     else:  # only new records
@@ -370,7 +370,7 @@ def main():
                 list_of_links = check_records(page_from, pages)
         if len(list_of_links) > 0:
             logger.info("Dowload new records")
-            for record in tqdm(list_of_links):
+            for record in list_of_links:
                 #print(record)#,record["url"],record["id"])
                 # may it be wget?
                 if not os.path.exists(join(documents_dir_path, record["id"] + ".html")):
